@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+* {
+  font-family: 'Roboto', sans-serif;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  background: #121212;
+  color: whitesmoke;
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+
+}
+
+
