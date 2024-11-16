@@ -1,5 +1,4 @@
-import {Dot, Heart, LogOut, LucideMenu, MessageCircleCode, MessageCircleMoreIcon, Search  
-    ,  User,  UserPlus, Users, X} from "lucide-react"
+import { Heart ,  MessageCircleMoreIcon, Search} from "lucide-react"
 import { useEffect, useState } from "react"
 import {useStore} from "../pages/store"
 import axios from "axios";
@@ -9,8 +8,7 @@ import {format} from "date-fns"
 import Avatar from "./Avatar";
 const Sidebar = () => { 
     const [list , setList] = useState([]);
-    const {setSelectedChatData , setSelectedChatType ,   setUserInfo , selectChatMessages , reload , onlineUsers , setOpenContactBar , openContactsBar} = useStore(); 
-    const [logoutPop , setLogoutPop] = useState(false);
+    const {setSelectedChatData , setSelectedChatType , openForwardBar , setOpenForwardBar ,   setUserInfo , selectChatMessages , reload , onlineUsers , setOpenContactBar , openContactsBar} = useStore(); 
     const [searchTerm , setSearchTerm] = useState('')
     
     const navigate = useNavigate();
@@ -44,7 +42,6 @@ const Sidebar = () => {
 
                 if(response.status === 200) {
                     setList(response.data.contacts)
-                    console.log(response.data.contacts)
                 }
             } catch (error) {
                 console.log(error.message);
@@ -61,21 +58,7 @@ const Sidebar = () => {
 
 
     return (
-        <div className="w-full border-r border-[#fafafa16]  h-full flex pointer-events-auto ">
-            <div className="h-full border-r border-[#fafafa16]  p-2 flex flex-col">
-                <div className="basis-[200px]">
-                    <LucideMenu className="cursor-pointer"/>
-                </div>
-                <div className="flex-1 flex  flex-col gap-5">
-                    <MessageCircleCode className="cursor-pointer"/>
-                    <Users className="cursor-pointer"/>
-                </div>
-                <div className="basis-[100px] space-y-2" >
-                    <User className="cursor-pointer"/>
-                    <LogOut onClick={() => handleLogout(true)} className="cursor-pointer"/>
-                </div>
-            </div>
-
+        <div className="w-full border-r px-2 border-[#fafafa16]  h-full flex pointer-events-auto ">
             {/* main */}
             <main className="flex-1 flex flex-col gap-2 px-2">
                 <h1 className="text-blue-700  py-2 text-xl font-semibold uppercase tracking-wider flex gap-2 items-center"> <Heart/> Chat</h1> 
@@ -119,9 +102,11 @@ const Sidebar = () => {
                     </div>
 
                     <div className="absolute bottom-10 right-2">
-                        <div onClick={() => setOpenContactBar(!openContactsBar)} class="relative p-[1px]  rounded-lg rounded-tl-none overflow-hidden cursor-pointer">
-                            <div class="absolute inset-0 bg-gradient-to-r from-[hsla(222,100%,68%,1)] via-[hsla(336,87%,61%,1)] to-[hsla(262,81%,71%,1)]"></div>
-                            <div class="relative rounded-lg py-2 px-3 text-2xl bg-theme-300">
+                        <div onClick={() => {
+                            openForwardBar ? setOpenForwardBar(false) : '';
+                            setOpenContactBar(!openContactsBar)}} className="relative p-[1px]  rounded-lg rounded-tl-none overflow-hidden cursor-pointer">
+                            <div className="absolute inset-0 bg-gradient-to-r from-[hsla(222,100%,68%,1)] via-[hsla(336,87%,61%,1)] to-[hsla(262,81%,71%,1)]"></div>
+                            <div className="relative rounded-lg py-2 px-3 text-2xl bg-theme-300">
                                 <MessageCircleMoreIcon/>
                             </div>
                         </div>

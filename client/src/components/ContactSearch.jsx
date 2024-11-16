@@ -55,7 +55,7 @@ const ContactSearch = () => {
                     <span className="text-xs capitalize mb-4 text-[#A6A6A6] ">Users on this website</span>
                     <div className="w-full flex flex-col overflow-y-scroll">
                         {contacts.map((contact , index) => (
-                            <div onClick={() => handleClick(contact)} className="w-full hover:bg-theme-500  rounded-sm flex p-1  items-center cursor-pointer hover:rounded-xl">
+                            <div key={index} onClick={() => handleClick(contact)} className="w-full hover:bg-theme-500  rounded-sm flex p-1  items-center cursor-pointer hover:rounded-xl">
                                 <div className="rounded-full h-7 w-7 p-1  text-white flex items-center justify-center  ">
                                     <User className="bg-transparent"/>
                                 </div>
