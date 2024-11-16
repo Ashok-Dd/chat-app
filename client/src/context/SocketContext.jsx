@@ -26,7 +26,6 @@ export  const SocketProvider = ({children}) => {
                 setReload((prev) => !prev)
                 if(selectedChatType !== undefined && (selectedChatData._id === message.sender._id || selectedChatData._id === message.recipient._id)    )  {
                     addMessage(message);
-                    console.log('Added');
                 }
             };
     

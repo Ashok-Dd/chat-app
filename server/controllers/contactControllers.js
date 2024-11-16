@@ -104,7 +104,7 @@ export const getAllDmMessages = async (req, res, next) => {
                 {sender : user1 , recipient : user2},
                 {sender : user2 , recipient : user1}
             ]}
-        );
+        ).populate("parentMessage");
 
         return res.status(200).json({success : true , messages})
     } catch (error) {

@@ -16,8 +16,14 @@ export const useStore = create((set , get) => ({
     setOnlineUsers : (data) => set((state) => ({...state , onlineUsers : data })),
     
     openContactsBar : false,
-    setOpenContactBar : (data) => set((state) => ({...state , openContactsBar : data })),
-
+    setOpenContactBar : (data) => {
+        set((state) => ({...state , openContactsBar : data }))
+    },
+    
+    openForwardBar : undefined,
+    setOpenForwardBar : (data) => {
+        set((state) => ({...state , openForwardBar : data }))
+    },
 
 
     selectChatMessages : [] ,
@@ -33,6 +39,7 @@ export const useStore = create((set , get) => ({
     closeChat : () => set({selectChatMessages : [] , selectChatType : undefined , selectedChatData : undefined}),
     
     addMessage : (message) => {
+        console.log(message)
         const selectChatMessages = get().selectChatMessages;
         const selectChatType = get().selectChatType;
         set({

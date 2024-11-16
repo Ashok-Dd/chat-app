@@ -12,7 +12,13 @@ const messageSchem = new mongoose.Schema({
     timestamp : {
         type : Date ,
          default : Date.now
-    }
+    },
+    parentMessage : {
+        type : mongoose.Schema.Types.ObjectId ,
+        ref : "Messages",
+        default : null
+    },
+    isForwarded : {type : Boolean , default : false}
 })
 
 export default  mongoose.model("Messages" , messageSchem);
