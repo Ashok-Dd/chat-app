@@ -1,4 +1,4 @@
-import { SendIcon, SmilePlus, Search, Phone, VideoIcon } from "lucide-react";
+import { SendIcon, SmilePlus, Search, Phone, VideoIcon, ArrowUp, ArrowDown, X } from "lucide-react";
 import { useStore } from "../pages/store";
 import { useSocket } from "../context/SocketContext";
 import EmojiPicker from 'emoji-picker-react';
@@ -10,6 +10,8 @@ import Avatar from "./Avatar";
 import ContactProfile from "./ContactProfile";
 import {FaAngleDown, FaSmileBeam} from "react-icons/fa"
 const ChatContainer = () => {
+    const searchedArrayRefs = useRef([]);
+    const searchedArrayIndexRef = useRef(searchedArrayIndex);
     const scrollRef = useRef(null);
     const profileRef = useRef(null);
     const emojiRef = useRef(null)
@@ -18,13 +20,38 @@ const ChatContainer = () => {
     const [openEmoji, setOpenEmoji] = useState(false);
     const [message, setMessage] = useState('');
     const [openProfile , setOpenProfile] = useState(false);
+    const [openSearch , setOpenSearch] = useState(false);
+    const [searchedArrayIndex , setSearchedArrayIndex] = useState(searchedArrayRefs.length - 1)
     const [selectedMessage , setSelectedMessage] = useState(null);
+    const [searchedMessage , setSearchedMessage] = useState('')
+
     const { selectedChatData, setSelectedChatData, setSelectedChatType, userInfo, selectChatMessages, setSelectedChatMessages, userTypingId } = useStore();
     const socket = useSocket();
+
+    useEffect(() => {
+        searchedArrayIndexRef.current = searchedArrayIndex;
+    }, [searchedArrayIndex]);
+    
+
+    useEffect(() => {
+        searchedArrayRefs.current = [];
+    }, [searchedMessage]);
+    
+    // Update searchedArrayIndex when searchedMessage changes
+    useEffect(() => {
+        if (searchedArrayRefs.current.length > 0) {
+            setSearchedArrayIndex(0); // Start with the first occurrence
+        } else {
+            setSearchedArrayIndex(-1); // No matches found
+        }
+    }, [searchedMessage]);
+
+
 
 
     useEffect(() => {
         const handleClick = (e) => {
+
             if (profileRef?.current && !profileRef.current.contains(e.target)) {
                 setOpenProfile(false);
             }
@@ -34,16 +61,15 @@ const ChatContainer = () => {
             if (editRef?.current && !editRef.current.contains(e.target)) {
                 setSelectedMessage(false);
             }
-    
+            
         }
         window.addEventListener('mousedown' , handleClick)
-        
+
         return (() => {
             
             window.removeEventListener('mousedown' , handleClick)
         })
     } , [])
-
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -60,7 +86,7 @@ const ChatContainer = () => {
 
     useEffect(() => {
         scrollRef?.current?.scrollIntoView({ behavior: "smooth" });
-    }, [selectChatMessages]);
+    } , [selectChatMessages]);
 
     const getPrevMessages = useCallback(async () => {
         if (!selectedChatData) return;
@@ -78,7 +104,59 @@ const ChatContainer = () => {
 
     useEffect(() => { getPrevMessages(); }, [getPrevMessages]);
 
-    useEffect(() => {console.log(selectedMessage)} , [selectedMessage] )
+
+    const renderSearchedMessage = (message) => {
+        const regex = new RegExp(`(${searchedMessage})`, 'gi');
+        const parts = message.content.split(regex);
+    
+        return (
+            <span>
+                {parts.map((part, index) =>
+                    part.toLowerCase() === searchedMessage.toLowerCase() ? (
+                        <span
+                            key={`${message._id}-${index}`} 
+                            ref={(el) => {
+                                // Store references to the highlighted parts
+                                if (el) searchedArrayRefs.current.push(el);
+                            }}
+                            className="bg-yellow-300 text-black"
+                        >
+                            {part}
+                        </span>
+                    ) : (
+                        part
+                    )
+                )}
+            </span>
+        );
+    };
+    
+    // Handle scrolling up to the previous highlighted message
+    const handleUp = () => {
+        if (searchedArrayIndex > 0) {
+            setSearchedArrayIndex((prev) => prev - 1);
+        }
+        const currentIndex = Math.max(searchedArrayIndex - 1, 0);
+        searchedArrayRefs.current[currentIndex]?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center' // Scroll to the center of the viewport
+        });
+    };
+    
+    // Handle scrolling down to the next highlighted message
+    const handleDown = () => {
+        if (searchedArrayIndex < searchedArrayRefs.current.length - 1) {
+            setSearchedArrayIndex((prev) => prev + 1);
+        }
+        const currentIndex = Math.min(searchedArrayIndex + 1, searchedArrayRefs.current.length - 1);
+        searchedArrayRefs.current[currentIndex]?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center' 
+        });
+    };
+
+
+
 
     const renderMessages = () => {
         let previousDate = '';
@@ -111,7 +189,12 @@ const ChatContainer = () => {
                                     <FaAngleDown className="font-thin tracking-wider" />
                                     <FaSmileBeam />
                                 </div>
-                                {message.content}
+                                {searchedMessage ? (
+                                    <>
+                                        {renderSearchedMessage(message)}
+                                    </>
+                                ) : message.content}
+
                                 <span className={`absolute bottom-0 right-2 ${currentUser === "sender" ? 'text-gray-100 bg-blue-500 text-right' : 'text-blue-500 text-left'} text-opacity-90 text-[.5em]`}>{format(message.timestamp, 'p')}</span>
                             </div>
                             <div
@@ -144,6 +227,9 @@ const ChatContainer = () => {
         setSelectedMessage((prev) => (prev === id ? null : id));
     };
     
+
+
+
     
 
     const handleTyping = useCallback(() => {
@@ -151,7 +237,7 @@ const ChatContainer = () => {
     }, [message, socket, userInfo, selectedChatData]);
 
     return (
-        <div className="flex flex-col w-full pointer-events-auto gap-2 p-5 items-center">
+        <div className="flex flex-col w-full pointer-events-auto gap-2 p-5 items-center relative">
             {/* header */}
             <div className="flex relative items-center gap-1 pb-2 justify-between w-full border-b border-[#ffffff16] ">
                 <div className="flex  gap-5 p-0   items-center">
@@ -188,9 +274,13 @@ const ChatContainer = () => {
                         <VideoIcon size={27}/>
                     </div>
                     <div className="p-1  cursor-pointer rounded-md shadow-sm  ">
-                        <Search size={27}/>
+                        {openSearch ? (<X size={27} onClick={() => setOpenSearch((prev) => !prev)} />) : (<Search size={27} onClick={() => setOpenSearch((prev) => !prev)} />)}
                     </div>
                 </div>
+
+                
+
+
 
                 <div ref={profileRef} className="absolute top-[110%] left-5 z-50">
                     <AnimatePresence>
@@ -209,6 +299,18 @@ const ChatContainer = () => {
                 </div>
             </div>
 
+            <AnimatePresence>
+            {openSearch && <motion.div className=" w-full max-w-[500px] h-full max-h-[55px] absolute top-20 right-10 rounded-lg bg-[#383838] flex items-center justify-around p-1 z-50"
+            initial={{opacity:0 , y:-10}}
+            animate={{opacity:1 , y:0}}
+            exit={{opacity:0 , y:-10}}
+            >
+                
+                <input type="text" value={searchedMessage} className="w-full max-w-[80%] p-2 rounded bg-zinc-800 focus:border-black outline-none text-gray-300 placeholder:text-gray-100" placeholder="Search within Chat" onChange={(e) => setSearchedMessage(e.target.value)}/>
+                <button onClick={() => handleUp()} className="border border-gray-500 p-2 rounded w-[8%] hover:bg-[#212121] flex items-center justify-center"><ArrowUp/></button>
+                <button onClick={() => handleDown()}className="border border-gray-500 p-2 rounded w-[8%] hover:bg-[#212121] flex items-center justify-center"><ArrowDown/></button>
+            </motion.div>}
+            </AnimatePresence>
             <div ref={containerRef} className="messages flex-1 flex flex-col w-full max-w-6xl overflow-y-scroll scrollbar-hide">
                 {renderMessages()}
                 <div ref={scrollRef} />
