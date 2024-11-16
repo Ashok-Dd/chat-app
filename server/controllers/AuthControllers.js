@@ -1,6 +1,7 @@
 import {User} from "../models/UserModel.js"
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
+
 export const login = async (req , res) => {
     try {
         const {email , password} = req.body;
@@ -47,7 +48,6 @@ export const login = async (req , res) => {
         return res.status(500).json({message : "Internal server error"})
     }
 }
-
 export const register = async (req , res) => {
     try {
         const {name , email , password } = req.body; 
@@ -92,9 +92,6 @@ export const register = async (req , res) => {
         return res.status(500).json({message : "Internal server error"})
     }
 }
-
-
-
 export const checkAuth = async ( req , res) => {
     try {
 
@@ -113,8 +110,6 @@ export const checkAuth = async ( req , res) => {
         
     }
 }
-
-
 export const logout = async (req , res) => {
     res.clearCookie("authToken" , {
             httpOnly : true ,
@@ -123,4 +118,49 @@ export const logout = async (req , res) => {
             secure : process.env.NODE_ENV === "production"
         });
         return res.status(200).json({success : true , message : "logged out successfully"})
+}
+
+
+export const updateProfile = async (req , res) => {
+    try {
+        const {name , about} = req.body;
+
+        console.log(req.body)
+
+        if(!name || !about) {
+            return res.status(400).json({message : "All fields are required" , success : false});
+        }
+
+        const user = await User.findById(req.userId);
+
+        
+        if(!user) {
+            return res.status(400).json({message : "email not exits" , success : false});
+        }
+
+        let st = "";
+        if(req.file) {
+            st = req.file.buffer.toString('base64');
+        }
+
+        user.name = name;
+        user.about = about;
+        user.profileImage = st;
+        user.isVerified = true;
+        console.log(user)
+        await user.save();
+
+        return res.status(200).json({
+            message : "profile updated successfully",
+            user : {
+                ...user._doc ,
+                password : undefined
+            },
+            success : true
+        })
+
+    } catch (error) {
+        console.log("Error in updating profile " , error.message);
+        return res.status(500).json({message : "Internal server error" , success : false})
+    }
 }

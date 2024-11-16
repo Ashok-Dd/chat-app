@@ -79,6 +79,7 @@ export const getAllDmMessages = async (req, res, next) => {
           lastMessageContent: 1,
           email: "$contactInfo.email",
           name: "$contactInfo.name",
+          profileImage : "$contactInfo.profileImage"
         },
       },
       {
