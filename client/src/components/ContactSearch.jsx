@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, User, X } from "lucide-react"
+import { ArrowLeft, ArrowRight, Search, User, X } from "lucide-react"
 import { useStore } from "../pages/store";
 import { useEffect, useState } from "react";
 
@@ -40,22 +40,22 @@ const ContactSearch = () => {
     };
 
     return (
-        <div className="w-full h-full  px-3 py-5 flex text-[#FAFAFA]">
-            <div className="rounded-lg shadow-md flex-1 bg-[#212121] px-2 flex flex-col gap-3">
-                <div className="w-full p-1 flex bg-[#212121]  justify-end">
-                    <X className="rounded-full hover:bg-[#383838] p-1 bg-transparent cursor-pointer" onClick={() => setOpenContactBar(!openContactsBar)} size={23}/>
+        <div className="w-full h-full bg-theme-200 px-3 py-5 flex ">
+            <div className="rounded-xl shadow-md flex-1   px-2 flex flex-col gap-3">
+                <div className="w-full p-1 flex ">
+                    <ArrowRight size={30} className="rounded-full hover:bg-theme-400 p-1 bg-transparent cursor-pointer" onClick={() => setOpenContactBar(!openContactsBar)} />
                 </div>
 
                 <div className="w-full flex relative">
-                    <Search size={20} className="absolute top-[50%] translate-y-[-50%] left-2"/>
-                    <input value={search} onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Search Users" className="flex-1 py-1  border-b border-black px-3 pl-10  outline-none " />
+                    <Search size={24} className="absolute top-[50%]  bg-transparent translate-y-[-50%] left-2"/>
+                    <input value={search} onChange={(e) => setSearch(e.target.value)} type="text" placeholder="Search Users" className="flex-1 py-1 bg-transparent  border-b border-gray-300 px-3 pl-10  outline-none " />
                 </div>
 
-                <div className="w-full flex flex-col bg-[#212121] ">
-                    <span className="text-xs capitalize text-[#A6A6A6] bg-[#212121]">Users on this website</span>
+                <div className="w-full flex flex-col  ">
+                    <span className="text-xs capitalize mb-4 text-[#A6A6A6] ">Users on this website</span>
                     <div className="w-full flex flex-col overflow-y-scroll">
                         {contacts.map((contact , index) => (
-                            <div onClick={() => handleClick(contact)} className="w-full bg-[#212121] rounded-sm flex p-1  items-center cursor-pointer hover:bg-[#383838]">
+                            <div onClick={() => handleClick(contact)} className="w-full hover:bg-theme-500  rounded-sm flex p-1  items-center cursor-pointer hover:rounded-xl">
                                 <div className="rounded-full h-7 w-7 p-1  text-white flex items-center justify-center  ">
                                     <User className="bg-transparent"/>
                                 </div>

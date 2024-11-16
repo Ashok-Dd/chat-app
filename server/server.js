@@ -28,7 +28,7 @@ server.listen(9000, () => {
     console.log("Server running at port 9000");
 });
 
-mongoose.connect("mongodb://localhost:27017")
+mongoose.connect("mongodb+srv://bunnyking828:sGfTbvMWAc1cKK7t@cluster0.qcx5r.mongodb.net/chat")
 .then(() => console.log("Connected to mongodb"))
 .catch((e) => console.log("failed to connect mongodb"))
 
