@@ -70,7 +70,7 @@ const Sidebar = () => {
                 </div>
                 <div className="basis-[100px] space-y-2" >
                     <User className="cursor-pointer"/>
-                    <LogOut onClick={() => setLogoutPop(true)} className="cursor-pointer"/>
+                    <LogOut onClick={() => handleLogout(true)} className="cursor-pointer"/>
                 </div>
             </div>
 
@@ -128,29 +128,7 @@ const Sidebar = () => {
                 </div>
             </main>
 
-            {logoutPop && (
-    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="w-full max-w-[360px] bg-white rounded-lg shadow-2xl p-6 border border-gray-200 flex flex-col items-center relative">
-            <span className="text-center text-lg font-semibold mb-4 text-gray-800">
-                Are you sure you want to Logout?
-            </span>
-            <div className="flex gap-4 w-full">
-                <button
-                    className="w-full bg-gradient-to-r from-green-400 to-green-600 p-2 rounded-md text-white font-semibold shadow-lg hover:from-green-500 hover:to-green-700 transition-all"
-                    onClick={() => setLogoutPop(false)}
-                >
-                    Close
-                </button>
-                <button
-                    className="w-full bg-gradient-to-r from-red-400 to-red-600 p-2 rounded-md text-white font-semibold shadow-lg hover:from-red-500 hover:to-red-700 transition-all"
-                    onClick={handleLogout}
-                >
-                    Logout
-                </button>
-            </div>
-        </div>
-    </div>
-)}
+            
 
         </div>
     )

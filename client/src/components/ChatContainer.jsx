@@ -86,17 +86,17 @@ const ChatContainer = () => {
         <div className="flex flex-col w-full pointer-events-auto gap-2 p-5 items-center">
             {/* header */}
             <div className="flex items-center gap-1 pb-2 justify-between w-full border-b border-black ">
-                <div className="flex  gap-5 p-0   items-center">
-                    <div className="rounded-full p-1 bg-gray-200 flex w-10 h-10 items-center justify-center "><User2 /></div>
+                <div className="flex bg-transparent  gap-5 p-0   items-center">
+                    <div className="rounded-full p-1 bg-gray-200 flex w-10 bg-transparent h-10 items-center justify-center "><User2 /></div>
                 </div>
-                <div className="flex-1 h-full hover:bg-gray-100 px-5 cursor-pointer py-1 rounded-sm ">
-                    <div className="flex flex-col">
-                        <span className="text-xl font-semibold text-opacity-70">{selectedChatData.name}</span>
+                <div className="flex-1 h-full bg-transparent px-5 hover:bg-[#383838] cursor-pointer py-1 rounded-sm ">
+                    <div className="flex flex-col bg-transparent">
+                        <span className="text-xl font-semibold bg-trnasparent text-opacity-70 bg-transparent">{selectedChatData.name}</span>
                         {userTypingId === selectedChatData?._id ? (
                             <motion.span 
                                 initial={{ opacity: 0, y: 20 }} 
                                 animate={{ opacity: 1, y: 0 }} 
-                                className="typing-indicator text-xs text-blue-500"
+                                className="typing-indicator bg-transparent text-xs text-blue-500"
                             >
                                 Typing . . .
                             </motion.span>
@@ -104,7 +104,7 @@ const ChatContainer = () => {
                             <motion.span 
                                 initial={{ opacity: 0, y: 20 }} 
                                 animate={{ opacity: 1, y: 0 }} 
-                                className="typing-indicator text-xs text-blue-500"
+                                className="typing-indicator bg-transparent text-xs text-blue-500"
                             >
                                 Last Seen  12:20 AM TODAY
                             </motion.span>
@@ -113,14 +113,14 @@ const ChatContainer = () => {
                     </div>
                 </div>
                 <div className="flex gap-2">    
-                    <div className="p-1 hover:bg-gray-100 cursor-pointer rounded-md shadow-sm border ">
-                        <Phone size={23}/>
+                    <div className="p-1 hover:bg-[#383838]  hover:text-black cursor-pointer rounded-md shadow-sm border ">
+                        <Phone size={20} className="bg-transparent"/>
                     </div>
-                    <div className="p-1 hover:bg-gray-100 cursor-pointer rounded-md shadow-sm border ">
-                        <VideoIcon size={25}/>
+                    <div className="p-1 hover:bg-[#383838] hover:text-black  cursor-pointer rounded-md shadow-sm border ">
+                        <VideoIcon size={20} className="bg-transparent"/>
                     </div>
-                    <div className="p-1 hover:bg-gray-100 cursor-pointer rounded-md shadow-sm border ">
-                        <Search size={25}/>
+                    <div className="p-1 hover:bg-[#383838] hover:text-black cursor-pointer rounded-md shadow-sm border ">
+                        <Search size={20} className="bg-transparent"/>
                     </div>
                 </div>
             </div>
@@ -140,7 +140,7 @@ const ChatContainer = () => {
                     <SmilePlus size={40} className="cursor-pointer" onClick={() => setOpenEmoji(!openEmoji)} />
                 </div>
                 <input value={message} onChange={(e) => { setMessage(e.target.value); handleTyping(); }} type="text" className="outline-none flex-1 focus:ring-2 border border-gray-500 rounded-full px-5 py-3" placeholder="Message..." />
-                <button type="submit" className="rounded-full hover:bg-gray-100 text-blue-500 p-3 flex items-center justify-center">
+                <button type="submit" className="rounded-full hover:bg-gray-100 hover:text-black text-blue-500 p-3 flex items-center bg-transparent justify-center">
                     <SendIcon size={35} />
                 </button>
             </form>
